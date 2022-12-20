@@ -3,7 +3,7 @@
 
 
 # The main concept
-
+The library is aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms.
 
 
 # How to use
