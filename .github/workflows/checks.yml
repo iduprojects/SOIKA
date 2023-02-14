@@ -24,8 +24,7 @@ jobs:
         python-version: 3.9
 
     - name: Install requirements
-    - run: pip install poetry
-    - run: poetry install
+      run: pip install black flake8 isort
 
     - name: black
       run: black . --check --diff
