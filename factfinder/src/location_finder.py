@@ -150,6 +150,6 @@ doc_bin.to_disk("train_2.spacy")
 # random.shuffle(TRAIN_DATA)
 # TODO: make train_test_split
 train = train_data[: int(len(train_data[:1000]) * 0.7)]
-test = train_data[int(len(train_data[:1000]) * 0.7):]
+test = train_data[int(len(train_data[:1000]) * 0.7) :]
 
 prdnlp = train_spacy(train, 100)
