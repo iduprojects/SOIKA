@@ -24,9 +24,8 @@ jobs:
         python-version: 3.9
 
     - name: Install requirements
-      run: |
-           pip install poetry
-           poetry install
+    - run: pip install poetry
+    - run: poetry install
 
     - name: black
       run: black . --check --diff
