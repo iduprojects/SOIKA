@@ -1,7 +1,31 @@
 FactFinder
 ==============
 
+.. |rus| image:: https://img.shields.io/badge/lang-en-red.svg
+   :target: /README_en.rst
 
+.. |eng| image:: https://img.shields.io/badge/lang-ru-yellow.svg
+   :target: /README.rst
+
+.. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
+    :target: https://github.com/Text-Analytics/FactFinder/blob/master/LICENSE.md
+    :alt: License
+
+.. |style| image:: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml/badge.svg
+    :target: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml
+    :alt: Style checks
+
+.. start-badges
+.. list-table::
+   :stub-columns: 1
+
+   * - tests
+     - | |style| 
+   * - license
+     - | |license|
+   * - languages
+     - | |eng| |rus|
+.. end-badges
 
 **FactFinder** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
 
