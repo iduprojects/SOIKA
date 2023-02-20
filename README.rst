@@ -1,10 +1,10 @@
 FactFinder
 ==============
 
-.. |rus| image:: https://img.shields.io/badge/lang-en-red.svg
+.. |eng| image:: https://img.shields.io/badge/lang-en-red.svg
    :target: /README_en.rst
 
-.. |eng| image:: https://img.shields.io/badge/lang-ru-yellow.svg
+.. |rus| image:: https://img.shields.io/badge/lang-ru-yellow.svg
    :target: /README.rst
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
