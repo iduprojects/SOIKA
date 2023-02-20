@@ -32,7 +32,8 @@ FactFinder
 It consists of several modules: classification, geolocation and risk detection.
 
 
-In the classification module we propose cascade with two classification methods. 
+In the classification module we propose cascade with two classification methods: 
+
 - First one is based on pre-trained spacy model (later will be replaced with BERT) and its goal is to determine main city function which is affected by a problem described in the complaint, for example, communal services or environmental protrection. 
 - Second one assigns complaint to one of pre-determined topic clusters. These clusters are generated with topic modelling algorithm for each city function and assessed by experts in these functions.
 
