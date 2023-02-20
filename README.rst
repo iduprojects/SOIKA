@@ -2,10 +2,10 @@ FactFinder
 ==============
 
 .. |eng| image:: https://img.shields.io/badge/lang-en-red.svg
-   :target: /README_en.rst
+   :target: /README.rst
 
 .. |rus| image:: https://img.shields.io/badge/lang-ru-yellow.svg
-   :target: /README.rst
+   :target: /README_ru.rst
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://github.com/Text-Analytics/FactFinder/blob/master/LICENSE.md
