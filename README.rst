@@ -31,6 +31,8 @@ FactFinder
 
 It consists of several modules: classification, geolocation and risk detection.
 
+.. image:: /docs/pipeline_en.png
+   :alt: The structure of the modeling pipeline
 
 In the classification module we propose cascade with two classification methods: 
 
