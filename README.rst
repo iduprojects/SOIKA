@@ -27,7 +27,7 @@ FactFinder Features
 Contribution Guide
 ==================
 
-The contribution guide is available in this [repository](https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md)
+The contribution guide is available in this `repository <https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md>`__.
 
 Acknowledgment
 ==============
