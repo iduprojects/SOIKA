@@ -33,6 +33,8 @@ FactFinder
 
 Библиотека состоит из нескольких модулей: классификация, геолокация и обнаружение рисков.
 
+.. image:: /docs/pipeline_rus.png
+   :alt: The structure of the modeling pipeline
 
 В модуле классификации реализуется каскад из двух методов:
 
