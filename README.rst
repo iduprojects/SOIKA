@@ -27,41 +27,43 @@ FactFinder
      - | |eng| |rus|
 .. end-badges
 
-**FactFinder** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
+**FactFinder** - библиотека, предназначенная для выявления точек общественной активности, объектов городской среды, а также прогнозирования социальных рисков, связанных с этими объектами.
 
-It consists of several modules: classification, geolocation and risk detection.
+В основе библиотеки лежит применение методов анализа естественного языка (NLP) к текстовым сообщениям горожан, размещенным на открытых коммуникационных платформах.
 
-.. image:: /docs/pipeline_en.png
+Библиотека состоит из нескольких модулей: классификация, геолокация и обнаружение рисков.
+
+.. image:: /docs/pipeline_rus.png
    :alt: The structure of the modeling pipeline
 
-In the classification module we propose cascade with two classification methods: 
+В модуле классификации реализуется каскад из двух методов:
 
-- First one is based on pre-trained spacy model (later will be replaced with BERT) and its goal is to determine main city function which is affected by a problem described in the complaint, for example, communal services or environmental protrection. 
-- Second one assigns complaint to one of pre-determined topic clusters. These clusters are generated with topic modelling algorithm for each city function and assessed by experts in these functions.
+- использование предварительно обученной модели (впоследствии будет заменена на BERT) для определения основных функций города, на которые влияет проблема, описанная в жалобе, например, коммунальные услуги или охрана окружающей среды. 
+- отнесение жалобы к одному из заранее определенных тематических кластеров. Эти кластеры создаются с помощью тематического моделирования для каждой функции города и оцениваются экспертами.
 
-In the geolocation module we propose ruBERT-based method of messages geolocation. It provides combination of pre-trained NER model to extract location (district, street and house number) from text and approximate string matching to assign coordinates from open data portal OpenStreetMaps to this location.
+В модуле геолокации используется метод на основе модели ruBERT. Она обеспечивает комбинацию предварительно обученной NER-модели для извлечения местоположения (района, улицы и номера дома) из текста и сопоставления адреса с координатами из портала открытых данных OpenStreetMaps.
 
-In the risk detection module... (in development)
+Модуль оценки степени риска рисков находится в разработке...
 
 
-FactFinder Features
+Особенности библиотеки
 ==============
 
-- Ready-for-use tool for researchers or analytics who work with unstructured social data. Our library can assist with extracting facts from texts from social media without any additional software
-- Module structure of the library allows to get and use only neccessary parts, for example, if your only goal is to produce geolocated messages about road accidents
-- This library can be used for risk assesment and modelling based on data with functional, spatial and temporal dimensions
+- Готовый к использованию инструмент для исследователей или аналитиков, работающих с неструктурированными социальными данными. Библиотека поможет извлечь факты из текстов из социальных сетей без использования дополнительного программного обеспечения.
+- Модульная структура библиотеки позволяет получать и использовать только необходимые части, например, если ваша единственная цель - создавать геолокированные сообщения о дорожно-транспортных происшествиях.
+- Библиотеку можно использовать для оценки рисков и моделирования на основе данных с функциональными, пространственными и временными измерениями.
 
-Contribution Guide
+Как участвовать
 ==================
 
-The contribution guide is available in this `repository <https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md>`__.
+Инструкция для добавления изменений находится в `repository <https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md>`__.
 
-Acknowledgment
+Дополнительная информация о проекте
 ==============
 
-The project was carried out as part of the research work of masters and postgraduate students.
+Репозиторий проекта НИР: № 622264 «Разработка сервиса выявления объектов городской среды общественной активности и ситуаций повышенного риска на основе текстовых сообщений горожан».
 
-Contacts
+Контакты
 ==============
-If you have questions or suggestions, you can contact us at the following address: mvin@itmo.ru (Maxim Natykin)
+При возникновении вопросов или предложений вы можете направить их по адресу: mvin@itmo.ru (Maxim Natykin)
 
