@@ -10,4 +10,5 @@ joblib==1.2.0
 spacy==3.4.3
 fuzzywuzzy==0.18.0
 tqdm==4.64.1
+flair==0.12.2
 transformers
