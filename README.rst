@@ -1,18 +1,18 @@
-FactFinder
+SOIKA
 ==============
 
 .. |eng| image:: https://img.shields.io/badge/lang-en-red.svg
-   :target: /README.rst
+   :target: /README_en.rst
 
 .. |rus| image:: https://img.shields.io/badge/lang-ru-yellow.svg
-   :target: /README_ru.rst
+   :target: /README.rst
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
-    :target: https://github.com/Text-Analytics/FactFinder/blob/master/LICENSE.md
+    :target: https://github.com/Text-Analytics/SOIKA/blob/master/LICENSE.md
     :alt: License
 
-.. |style| image:: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml/badge.svg
-    :target: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml
+.. |style| image:: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml/badge.svg
+    :target: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml
     :alt: Style checks
 
 .. start-badges
@@ -27,7 +27,7 @@ FactFinder
      - | |eng| |rus|
 .. end-badges
 
-**FactFinder** - библиотека, предназначенная для выявления точек общественной активности, объектов городской среды, а также прогнозирования социальных рисков, связанных с этими объектами.
+**SOIKA** - библиотека, предназначенная для выявления точек общественной активности, объектов городской среды, а также прогнозирования социальных рисков, связанных с этими объектами.
 
 В основе библиотеки лежит применение методов анализа естественного языка (NLP) к текстовым сообщениям горожан, размещенным на открытых коммуникационных платформах.
 
@@ -56,7 +56,7 @@ FactFinder
 Как участвовать
 ==================
 
-Инструкция для добавления изменений находится в `repository <https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md>`__.
+Инструкция для добавления изменений находится в `repository <https://github.com/Text-Analytics/SOIKA/blob/master/CONTRIBUTING.md>`__.
 
 Дополнительная информация о проекте
 ==============
