@@ -42,7 +42,7 @@ class EventDetection:
       messages_without_geometry['geometry'] = [rep_point] * len(messages_without_geometry)
       df = pd.concat([messages_with_geometry, messages_without_geometry])
       gdf = gpd.GeoDataFrame(df, geometry='geometry').set_crs(4326).drop(columns=['Unnamed: 0'])
-      self.messages = gdf
+      return gdf
 
   def _get_roads(self, city_name, city_crs) -> gpd.GeoDataFrame:
       """
@@ -59,20 +59,19 @@ class EventDetection:
       road_id_name = dict(enumerate(links.name.dropna().unique().tolist()))
       road_name_id = {v: k for k, v in road_id_name.items()}
       links['road_id'] = links['name'].replace(road_name_id)
-      self.links = links
+      return links
 
   def _get_buildings(self) -> gpd.GeoDataFrame:
       """
       Get the buildings of a city as a GeoDataFrame
       """
       buildings = gpd.read_file(self.population_filepath)
-      print(len(buildings))
       buildings = buildings[['address', 'building_id', 'population_balanced', 'geometry']]
       buildings = buildings.to_crs(4326)
       buildings['building_id'] = buildings.index
       buildings = gpd.sjoin_nearest(buildings, self.links[['link_id', 'road_id', 'geometry']], how='left', max_distance = 500)\
       .drop(columns=['index_right']).drop_duplicates(subset='building_id')
-      self.buildings = buildings
+      return buildings
 
   def _collect_population(self) -> dict:
     '''
@@ -84,7 +83,7 @@ class EventDetection:
     pops_links = buildings[['population_balanced', 'link_id']].groupby('link_id').sum()['population_balanced'].to_dict()
     pops_roads = buildings[['population_balanced', 'road_id']].groupby('road_id').sum()['population_balanced'].to_dict()
     pops = {'global':pops_global, 'road':pops_roads, 'link':pops_links, 'building':pops_buildings}
-    self.population = pops
+    return pops
 
   def _preprocess(self) ->  gpd.GeoDataFrame:
     '''
@@ -100,27 +99,26 @@ class EventDetection:
     messages.loc[messages.road_id.isna(), 'road_id'] = messages.loc[messages.road_id.isna()]['road_id_from_building']
     messages = messages[['message_id', 'text', 'geometry', 'building_id', 'link_id', 'road_id', 'date_time', 'cats']].dropna(subset='text')
     messages['global_id'] = 0
-    self.messages = messages
+    return messages
 
-  def _create_model(self):
+  def _create_model(self, min_event_size):
     '''
     Create a topic model with a UMAP, HDBSCAN, and a BERTopic model    
     '''
     umap_model = UMAP(n_neighbors=15, n_components=5,
                     min_dist=0.0, metric='cosine', random_state=42)
-    hdbscan_model = HDBSCAN(min_cluster_size=self.min_cluster_size, min_samples=1, metric='euclidean',
+    hdbscan_model = HDBSCAN(min_cluster_size=min_event_size, min_samples=1, metric='euclidean',
                             cluster_selection_method='eom', prediction_data=True)
     embedding_model = pipeline("feature-extraction", model="cointegrated/rubert-tiny2")
     topic_model = BERTopic(embedding_model=embedding_model, hdbscan_model=hdbscan_model, umap_model=umap_model,
                           calculate_probabilities=True, verbose=True, n_gram_range = (1,3))
-    self.topic_model = topic_model
+    return topic_model
 
-  def _event_from_object(self, target_column:str, population:dict, object_id: float, event_level: str):
+  def _event_from_object(self, messages, topic_model, target_column:str, population:dict, object_id: float, event_level: str):
     '''
     Create a list of events for a given object (building, road, link, total) 
     '''
-    topic_model = self.topic_model.copy()
-    local_messages = self.messages[messages[target_column] == object_id]
+    local_messages = messages[messages[target_column] == object_id]
     message_ids = local_messages.message_id.tolist()
     docs = local_messages.text.tolist()
     if len(docs) >= 5:
@@ -159,9 +157,9 @@ class EventDetection:
     messages = self.messages.copy()
     messages_list = messages.text.tolist()
     index_list = messages.message_id.tolist()
-    pops = _collect_population()
-    topic_model = _create_model(min_event_size)
-    events = [[_event_from_object(messages, topic_model, f'{level}_id', pops, oid, level) for oid in messages[f'{level}_id'].unique().tolist()] for level in reversed(self.levels)]
+    pops = self._collect_population()
+    topic_model = self._create_model(min_event_size)
+    events = [[self._event_from_object(messages, topic_model, f'{level}_id', pops, oid, level) for oid in messages[f'{level}_id'].unique().tolist()] for level in reversed(self.levels)]
     events = [item for sublist in events for item in sublist if item is not None]
     events = pd.concat(list(chain(events)))
     events['geometry'] = events.message_ids.map(lambda x: messages[messages.message_id.isin(x)].geometry.unary_union.representative_point())
@@ -173,12 +171,14 @@ class EventDetection:
     events['docs'] = events['docs'].map(lambda x: ', '.join([str(index_list[messages_list.index(text)]) for text in x]))
     events.message_ids = events.message_ids.map(lambda x: ', '.join([str(id) for id in x]))
     events['risk'] = 1
-    self.events = events
+    return events
 
   def _get_event_connections(self) -> gpd.GeoDataFrame:
     '''
     Create a list of connections between events.      
     '''
+    events = self.events.copy()
+    events.geometry = events.centroid
     weights = [len((set(c[0]) & set(c[1]))) for c in combinations(self.events.message_ids, 2)]
     nodes = [c for c in combinations(events.id, 2)]
     connections = pd.DataFrame(nodes, weights).reset_index()
@@ -190,7 +190,7 @@ class EventDetection:
     connections['geometry'] = connections.apply(lambda x: LineString([x['geometry'], x['geometry_']]), axis=1)
     connections.drop(columns=['geometry_'], inplace=True)
     connections = gpd.GeoDataFrame(connections, geometry='geometry').set_crs(32636)
-    self.connections = connections
+    return connections
 
   def _rebalance(connections, events, levels, event_population:int, event_id:str):
     """
@@ -220,14 +220,14 @@ class EventDetection:
     for level in levels[1:]:
       levels_to_account = levels[:levels.index(level)]
       events_for_level = events[events.level == level]
-      events_for_level['rebalanced_population'] = events_for_level.apply(lambda x: _rebalance(connections, events, levels_to_account, x.potential_population, x.id), axis=1)
+      events_for_level['rebalanced_population'] = events_for_level.apply(lambda x: self._rebalance(connections, events, levels_to_account, x.potential_population, x.id), axis=1)
       events_rebalanced.append(events_for_level)
     events_rebalanced = pd.concat(events_rebalanced)
     events_rebalanced.loc[events_rebalanced.rebalanced_population.isna(), 'rebalanced_population'] = 0
     events_rebalanced.rename(columns={'rebalanced_population':'population'}, inplace=True)
     events_rebalanced.drop(columns=['potential_population'], inplace=True)
     events_rebalanced.population = events_rebalanced.population.astype(int)
-    self.events = events_rebalanced
+    return events_rebalanced
 
   def _filter_outliers(self):
     '''
@@ -241,8 +241,7 @@ class EventDetection:
     connections = connections[connections.a.map(lambda x: False if re.match(pattern, x) else True)]
     connections = connections[connections.b.map(lambda x: False if re.match(pattern, x) else True)]
     events = events[['name', 'docs', 'level', 'id', 'population', 'message_ids', 'geometry']]
-    self.events = events
-    self.connections = connections
+    return events, connections
 
   def _prepare_messages(self):
     '''
@@ -253,7 +252,7 @@ class EventDetection:
     messages.rename(columns={'cats':'block'}, inplace=True)
     messages = messages[['message_id', 'text', 'geometry', 'date_time', 'block']]
     messages = messages.to_crs(4326)
-    self.messages = messages
+    return messages
 
   def run(self, city_name:str, city_crs:int, min_event_size:int):
     '''
