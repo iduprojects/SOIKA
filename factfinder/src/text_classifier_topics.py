@@ -2,10 +2,10 @@ import pandas as pd
 from transformers import pipeline
 
 
-class TextClassifier:
+class TextClassifierTopics:
     def __init__(
         self,
-        repository_id="Sandrro/text_to_function_v2",
+        repository_id="Sandrro/text_to_subfunction_v10",
         number_of_categories=1,
         device_type=None,
     ):

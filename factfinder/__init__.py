@@ -1,3 +1,3 @@
-from .src import AddressExtractor, TextClassifier, EventDetection
+from .src import AddressExtractor, TextClassifier, TextClassifierTopics, EventDetection
 
-__all__ = ["TextClassifier", "AddressExtractor", "EventDetection"]
+__all__ = ["TextClassifier", "AddressExtractor", "TextClassifierTopics", "EventDetection"]
