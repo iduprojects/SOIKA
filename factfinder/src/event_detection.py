@@ -150,7 +150,7 @@ class EventDetection:
             higher_level_object_id = buildings[buildings[f'{event_level}_id'] == object_id][f"{higher_event_level}_id"].unique().tolist()[0]
             try:
               event_model['potential_population'] = population[event_level][object_id] / population[higher_event_level][higher_level_object_id]
-            except ZeroDivisionError:
+            except: #need to select type of error
               event_model['potential_population'] = 1
           except IndexError:
             event_model['potential_population'] = 1
