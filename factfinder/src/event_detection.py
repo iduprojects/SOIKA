@@ -7,7 +7,6 @@ import pandas as pd
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
 from shapely.geometry import LineString
-from shapely.wkt import loads
 from transformers.pipelines import pipeline
 from umap import UMAP
 
@@ -18,19 +17,19 @@ class EventDetection:
         self.levels = ["building", "link", "road", "global"]
         self.levels_scale = dict(zip(self.levels, list(range(2, 10, 2))))
         self.functions_weights = {
-            'Безопасность': 0.12,
-            'Благоустройство': 0.21,
-            'Дороги': 0.18,
-            'ЖКХ': 0.2,
-            'Здравоохранение': 0.2,
-            'Другое': 0.16,
-            'Образование': 0.16,
-            'Социальная защита': 0.13,
-            'Строительство': 0.19,
-            'Обращение с отходами': 0.19,
-            'Транспорт': 0.17,
-            'Экология': 0.22,
-            'Энергетика': 0.19
+            "Безопасность": 0.12,
+            "Благоустройство": 0.21,
+            "Дороги": 0.18,
+            "ЖКХ": 0.2,
+            "Здравоохранение": 0.2,
+            "Другое": 0.16,
+            "Образование": 0.16,
+            "Социальная защита": 0.13,
+            "Строительство": 0.19,
+            "Обращение с отходами": 0.19,
+            "Транспорт": 0.17,
+            "Экология": 0.22,
+            "Энергетика": 0.19,
         }
         self.messages = None
         self.links = None
@@ -315,7 +314,7 @@ class EventDetection:
                     messages["message_id"].isin(x)
                 ].importance.mean()
             )
-            return event_model  
+            return event_model
         else:
             return
 
@@ -519,7 +518,13 @@ class EventDetection:
         messages = messages.to_crs(4326)
         return messages
 
-    def run(self, target_texts: gpd.GeoDataFrame, city_name: str, city_crs: int, min_event_size: int):
+    def run(
+        self,
+        target_texts: gpd.GeoDataFrame,
+        city_name: str,
+        city_crs: int,
+        min_event_size: int,
+    ):
         """
         Returns a GeoDataFrame of events, a GeoDataFrame of
         connections between events, and a GeoDataFrame of messages.
