@@ -14,7 +14,6 @@ from umap import UMAP
 
 class EventDetection:
     def __init__(self):
-        self.messages_filepath = "messages.csv"
         self.population_filepath = "population.geojson"
         self.levels = ["building", "link", "road", "global"]
         self.levels_scale = dict(zip(self.levels, list(range(2, 10, 2))))
@@ -23,7 +22,7 @@ class EventDetection:
             "Другое": 0.1,
             "Благоустройство": 0.5,
             "ЖКХ": 0.5,
-            "ТКО": 0.5,
+            "Обращение с отходами": 0.5,
             "Дороги": 0.5,
             "Экология": 0.5,
             "Социальная защита": 0.5,
@@ -40,33 +39,6 @@ class EventDetection:
         self.topic_model = None
         self.events = None
         self.connections = None
-
-    def _read_data(self) -> gpd.GeoDataFrame:
-        """
-        Read the data from the csv file, add representative
-        point geometry for texts without it and return a GeoDataframe.
-        """
-        df = pd.read_csv(self.messages_filepath)
-        messages_with_geometry = df[df["geometry"].notna()]
-        messages_with_geometry.geometry = messages_with_geometry.geometry.map(
-            loads
-        )
-        rep_point = (
-            gpd.GeoDataFrame(messages_with_geometry, geometry="geometry")
-            .set_crs(4326)
-            .geometry.unary_union.representative_point()
-        )
-        messages_without_geometry = df[df["geometry"].isna()]
-        messages_without_geometry["geometry"] = [rep_point] * len(
-            messages_without_geometry
-        )
-        df = pd.concat([messages_with_geometry, messages_without_geometry])
-        gdf = (
-            gpd.GeoDataFrame(df, geometry="geometry")
-            .set_crs(4326)
-            .drop(columns=["Unnamed: 0"])
-        )
-        return gdf
 
     def _get_roads(self, city_name, city_crs) -> gpd.GeoDataFrame:
         """
@@ -279,9 +251,9 @@ class EventDetection:
             event_model["id"] = (
                 event_model.Topic.astype(str)
                 + "_"
-                + event_model.level
+                + event_model.level.astype(str)
                 + "_"
-                + event_model.object_id
+                + event_model.object_id.astype(str)
             )
             if event_level != "global":
                 if event_level != "road":
@@ -343,7 +315,7 @@ class EventDetection:
                     messages["message_id"].isin(x)
                 ].importance.mean()
             )
-            return event_model
+            return event_model  
         else:
             return
 
@@ -515,7 +487,7 @@ class EventDetection:
             len(
                 events[
                     events.name.map(
-                        lambda x: False if re.match(pattern, x) else True
+                        lambda x: True if re.match(pattern, x) else False
                     )
                 ]
             ),
@@ -547,12 +519,12 @@ class EventDetection:
         messages = messages.to_crs(4326)
         return messages
 
-    def run(self, city_name: str, city_crs: int, min_event_size: int):
+    def run(self, target_texts: gpd.GeoDataFrame, city_name: str, city_crs: int, min_event_size: int):
         """
         Returns a GeoDataFrame of events, a GeoDataFrame of
         connections between events, and a GeoDataFrame of messages.
         """
-        self.messages = self._read_data()
+        self.messages = target_texts.copy()
         print("messages loaded")
         self.links = self._get_roads(city_name, city_crs)
         print("road links loaded")
