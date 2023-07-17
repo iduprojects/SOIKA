@@ -24,8 +24,8 @@ class TextClassifierTopics:
         preds = pd.DataFrame(self.classifier(t, top_k=self.CATS_NUM))
         self.classifier.call_count = 0
         if self.CATS_NUM > 1:
-            cats = ", ".join(preds["label"].tolist())
-            probs = ", ".join(preds["score"].round(3).astype(str).tolist())
+            cats = "; ".join(preds["label"].tolist())
+            probs = "; ".join(preds["score"].round(3).astype(str).tolist())
         else:
             cats = preds["label"][0]
             probs = preds["score"].round(3).astype(str)[0]
