@@ -3,6 +3,7 @@ from .src import (
     EventDetection,
     TextClassifier,
     TextClassifierTopics,
+    Geocoder,
 )
 
 __all__ = [
@@ -10,4 +11,5 @@ __all__ = [
     "AddressExtractor",
     "TextClassifierTopics",
     "EventDetection",
+    "Geocoder",
 ]
