@@ -1,5 +1,4 @@
 from .src import (
-    AddressExtractor,
     EventDetection,
     TextClassifier,
     TextClassifierTopics,
@@ -7,9 +6,8 @@ from .src import (
 )
 
 __all__ = [
-    "TextClassifier",
-    "AddressExtractor",
-    "TextClassifierTopics",
     "EventDetection",
+    "TextClassifier",
+    "TextClassifierTopics",
     "Geocoder",
 ]
