@@ -8,6 +8,8 @@ from bertopic import BERTopic
 from hdbscan import HDBSCAN
 from shapely.geometry import LineString
 from transformers.pipelines import pipeline
+from sklearn import preprocessing
+import numpy as np
 from umap import UMAP
 
 
@@ -247,42 +249,12 @@ class EventDetection:
             event_model = topic_model.get_topic_info()
             event_model["level"] = event_level
             event_model["object_id"] = str(object_id)
-            event_model["id"] = (
-                event_model.Topic.astype(str)
-                + "_"
-                + event_model.level.astype(str)
-                + "_"
-                + event_model.object_id.astype(str)
-            )
-            if event_level != "global":
-                if event_level != "road":
-                    try:
-                        higher_event_level = self.levels[
-                            self.levels.index(event_level) + 1
-                        ]
-                        higher_level_object_id = (
-                            buildings[
-                                buildings[f"{event_level}_id"] == object_id
-                            ][f"{higher_event_level}_id"]
-                            .unique()
-                            .tolist()[0]
-                        )
-                        try:
-                            event_model["potential_population"] = (
-                                population[event_level][object_id]
-                                / population[higher_event_level][
-                                    higher_level_object_id
-                                ]
-                            )
-                        except Exception:  # need to select type of error
-                            event_model["potential_population"] = 1
-                    except IndexError:
-                        event_model["potential_population"] = 1
-                        event_model["level"] = "global"
-                else:
-                    event_model["potential_population"] = 1
-            else:
-                event_model["potential_population"] = 1
+            event_model["id"] = event_model.apply(lambda x: f"{str(x.Topic)}_{str(x.level)}_{str(x.object_id)}", axis=1)
+            try:
+                event_model["potential_population"] = population[event_level][object_id]
+            except Exception:  # need to select type of error
+                event_model["potential_population"] = population['global'][0]
+
             clustered_messages = pd.DataFrame(
                 data={"id": message_ids, "text": docs, "topic_id": topics}
             )
@@ -375,19 +347,6 @@ class EventDetection:
             * events.importance
             * events.population
         )
-        events = events[
-            [
-                "name",
-                "docs",
-                "level",
-                "id",
-                "population",
-                "importance",
-                "risk",
-                "message_ids",
-                "geometry",
-            ]
-        ]
         return events
 
     def _get_event_connections(self) -> gpd.GeoDataFrame:
@@ -427,7 +386,7 @@ class EventDetection:
         if len(connections_of_event) > 0:
             accounted_pops = events[
                 events.id.isin(connections_of_event) & events.level.isin(levels)
-            ].potential_population.sum()
+            ].population.sum()
             if event_population >= accounted_pops:
                 rebalanced_pops = event_population - accounted_pops
             else:
@@ -435,7 +394,7 @@ class EventDetection:
                 accounted_pops = events[
                     events.id.isin(connections_of_event)
                     & events.level.isin(levels)
-                ].potential_population.sum()
+                ].population.sum()
                 rebalanced_pops = event_population - accounted_pops
             return rebalanced_pops
         else:
@@ -457,7 +416,7 @@ class EventDetection:
                     connections,
                     events,
                     levels_to_account,
-                    x.potential_population,
+                    x.population,
                     x.id,
                 ),
                 axis=1,
@@ -468,11 +427,25 @@ class EventDetection:
             events_rebalanced.rebalanced_population.isna(),
             "rebalanced_population",
         ] = 0
-        events_rebalanced.rename(
-            columns={"rebalanced_population": "population"}, inplace=True
-        )
-        events_rebalanced.drop(columns=["potential_population"], inplace=True)
+        events_rebalanced['population'] = events_rebalanced.rebalanced_population
+        events_rebalanced.drop(columns=["rebalanced_population"], inplace=True)
         events_rebalanced.population = events_rebalanced.population.astype(int)
+        events_rebalanced["population"] = (
+            events_rebalanced["population"] - events_rebalanced["population"].min()
+        ) / (
+            events_rebalanced["population"].max() - events_rebalanced["population"].min()
+            )
+        events_rebalanced['population'] = pd.qcut(events_rebalanced['population'], q=10, labels=False, duplicates='drop') / 10 #fix later
+        events_rebalanced.loc[events_rebalanced.population == 0, "population"] = 0.1 #fix later
+        events_rebalanced["risk"] = (
+            events_rebalanced.intensity
+            * (events_rebalanced.duration + 1)
+            * events_rebalanced.importance
+            * events_rebalanced.population
+        )
+        events = events[[
+            'name', 'docs', 'level', 'id', 'risk', 'message_ids', 'geometry'
+            ]]
         return events_rebalanced
 
     def _filter_outliers(self):
@@ -541,6 +514,8 @@ class EventDetection:
         print("events detected")
         self.connections = self._get_event_connections()
         print("connections generated")
+        self.events = self._rebalance_events()
+        print("population and risk rebalanced")
         self.events, self.connections = self._filter_outliers()
         print("outliers filtered")
         self.messages = self._prepare_messages()
