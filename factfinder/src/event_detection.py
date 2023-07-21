@@ -441,18 +441,9 @@ class EventDetection:
             events_rebalanced["population"].max()
             - events_rebalanced["population"].min()
         )
-        events_rebalanced["population"] = (
-            pd.qcut(
-                events_rebalanced["population"],
-                q=10,
-                labels=False,
-                duplicates="drop",
-            )
-            / 10
-        )  # fix later
         events_rebalanced.loc[
             events_rebalanced.population == 0, "population"
-        ] = 0.1  # fix later
+        ] = 0.0001  # fix later
         events_rebalanced["risk"] = (
             events_rebalanced.intensity
             * (events_rebalanced.duration + 1)
