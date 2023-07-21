@@ -13,7 +13,7 @@ from umap import UMAP
 
 class EventDetection:
     def __init__(self):
-        self.population_filepath = "population.geojson"
+        self.population_filepath = None
         self.levels = ["building", "link", "road", "global"]
         self.levels_scale = dict(zip(self.levels, list(range(2, 10, 2))))
         self.functions_weights = {
@@ -510,6 +510,7 @@ class EventDetection:
     def run(
         self,
         target_texts: gpd.GeoDataFrame,
+        filepath_to_population: str,
         city_name: str,
         city_crs: int,
         min_event_size: int,
@@ -518,6 +519,7 @@ class EventDetection:
         Returns a GeoDataFrame of events, a GeoDataFrame of
         connections between events, and a GeoDataFrame of messages.
         """
+        self.population_filepath = filepath_to_population
         self.messages = target_texts.copy()
         print("messages loaded")
         self.links = self._get_roads(city_name, city_crs)
