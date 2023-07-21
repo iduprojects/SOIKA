@@ -1,31 +1,31 @@
 """
-This module is aimed to provide necessary tools to find mentioned location in the text.
-In this scenario texts are comments in social networks (e.g. Vkontakte). 
-Thus the model was trained on the corpus of comments on Russian language. 
+This module is aimed to provide necessary tools to find mentioned
+location in the text.
+In this scenario texts are comments in social networks (e.g. Vkontakte).
+Thus the model was trained on the corpus of comments on Russian language.
 """
 
-from flair.models import SequenceTagger
-from flair.data import Sentence
-import flair, torch
-import pandas as pd
-import requests
+import re
+import warnings
+from typing import List, Optional
+
+import flair
+import geopandas as gpd
+import networkx as nx
 import osm2geojson
 import osmnx as ox
-import networkx as nx
-from typing import List, Optional
-import re
-
-import geopandas as gpd
-from shapely.geometry import Point
+import pandas as pd
 import pymorphy2
-import geopandas as gpd
-from geopy.geocoders import Nominatim
+import requests
+import torch
+from flair.data import Sentence
+from flair.models import SequenceTagger
 from geopy.exc import GeocoderUnavailable
-import warnings
+from geopy.geocoders import Nominatim
+from shapely.geometry import Point
+from tqdm import tqdm
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-
-from tqdm import tqdm
 
 tqdm.pandas()
 
@@ -34,7 +34,7 @@ class Location:
     """
     This class is aimed to efficiently geocode addresses using Nominatim.
     Geocoded addresses are stored in the 'book' dictionary argument.
-    Thus if the address repeates -- it would be taken from the book.
+    Thus, if the address repeats -- it would be taken from the book.
     """
 
     max_tries = 3
@@ -75,7 +75,9 @@ class Streets:
     global_crs: int = 4326
 
     @staticmethod
-    def get_city_bounds(osm_city_name: str, osm_city_level: int) -> gpd.GeoDataFrame:
+    def get_city_bounds(
+        osm_city_name: str, osm_city_level: int
+    ) -> gpd.GeoDataFrame:
         overpass_url = "http://overpass-api.de/api/interpreter"
         overpass_query = f"""
         [out:json];
@@ -85,7 +87,9 @@ class Streets:
                 );
         out geom;
         """
-        result = requests.get(overpass_url, params={"data": overpass_query}).json()
+        result = requests.get(
+            overpass_url, params={"data": overpass_query}
+        ).json()
         resp = osm2geojson.json2geojson(result)
         city_bounds = gpd.GeoDataFrame.from_features(resp["features"]).set_crs(
             Streets.global_crs
@@ -118,8 +122,8 @@ class Streets:
     @staticmethod
     def drop_words_from_name(x: str) -> str:
         """
-        This function drops parts of street names that are not the name of the street
-        (e.g. avenue).
+        This function drops parts of street names that are not the name
+        of the street (e.g. avenue).
         """
 
         try:
@@ -144,7 +148,7 @@ class Streets:
         This step is necessary to match recognised street addresses later.
         We need to do this match because Nominatim is very sensitive geocoder
         and requires almost exact match between addresses in the OSM database
-        and the geocoding address 
+        and the geocoding address.
         """
 
         streets_df["street_name"] = streets_df["street"].progress_apply(
@@ -181,8 +185,9 @@ class Geocoder:
 
     def extract_ner_street(self, text: str) -> pd.Series:
         """
-        Function calls the pre-trained custom NER model to extract mentioned 
-        addresses from the texts (usually comment) in social networks in russian langage.
+        Function calls the pre-trained custom NER model to extract mentioned
+        addresses from the texts (usually comment) in social networks in
+        russian language.
         The model scores 0.8 in F1 and other metrics.
         """
 
@@ -209,8 +214,8 @@ class Geocoder:
     @staticmethod
     def get_stem(street_names_df: pd.DataFrame) -> pd.DataFrame:
         """
-        Function finds the stem of the word to find this stem in the street names 
-        dictionary (df) 
+        Function finds the stem of the word to find this stem in the street
+        names dictionary (df).
         """
 
         # initialize PyMorphy2 analyzer
@@ -221,23 +226,28 @@ class Geocoder:
 
         # add a column for each case with the respective form of the word
         for case in cases:
-            street_names_df[case] = street_names_df["street_name"].progress_apply(
+            street_names_df[case] = street_names_df[
+                "street_name"
+            ].progress_apply(
                 lambda x: morph.parse(x)[0].inflect({case}).word
                 if morph.parse(x)[0].inflect({case})
                 else None
             )
         return street_names_df
 
-    def find_word_form(self, df: pd.DataFrame, strts_df: pd.DataFrame) -> pd.DataFrame:
+    def find_word_form(
+        self, df: pd.DataFrame, strts_df: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         In the russian language any word has different forms.
         Since addresses are extracted from the texts in social networks
         they might be in any possible form. This function is aimed to match that
         free form to the one that is used in the OSM database.
-         
-        Since the stem is found there would be several streets with that stem in their name.
-        However the searching street name has its specific ending (form) and not each matched
-        street name could have it.
+
+        Since the stem is found there would be several streets with that stem
+        in their name.
+        However the searching street name has its specific ending (form) and
+        not each matched street name could have it.
 
         TODO: add spellcheker since there might be misspelled words.
         """
@@ -254,7 +264,10 @@ class Geocoder:
                         strts_df[col] == search_val, "street"
                     ].values
                     streets_full = [
-                        street + f" {val_num}" + f" {self.osm_city_name}" + " Россия"
+                        street
+                        + f" {val_num}"
+                        + f" {self.osm_city_name}"
+                        + " Россия"
                         for street in streets_full
                     ]
 
@@ -275,9 +288,9 @@ class Geocoder:
     def get_level(row: pd.Series) -> str:
         """
         Addresses in the messages are recognized on different scales:
-        1. Where we know the stret name and house number -- house level;
-        2. Where we know only street name -- street level (with the centroid geometry
-        of the street);
+        1. Where we know the street name and house number -- house level;
+        2. Where we know only street name -- street level (with the centroid
+        geometry of the street);
         3. Where we don't know any info but the city -- global level.
         """
 
@@ -288,10 +301,12 @@ class Geocoder:
         else:
             return "global"
 
-    def get_street(self, df: pd.DataFrame, text_column: str) -> gpd.GeoDataFrame:
+    def get_street(
+        self, df: pd.DataFrame, text_column: str
+    ) -> gpd.GeoDataFrame:
         """
-        Function calls NER model and post-process result in order to extract the address
-        mentioned in the text
+        Function calls NER model and post-process result in order to extract
+        the address mentioned in the text.
         """
 
         df[text_column].dropna(inplace=True)
@@ -305,7 +320,9 @@ class Geocoder:
         df["Street"] = df["Street"].apply(lambda x: pattern1.sub(r"\1 \2\3", x))
 
         pattern2 = re.compile(r"\d+")
-        df["Numbers"] = df["Street"].apply(lambda x: " ".join(pattern2.findall(x)))
+        df["Numbers"] = df["Street"].apply(
+            lambda x: " ".join(pattern2.findall(x))
+        )
         df["Street"] = df["Street"].apply(lambda x: pattern2.sub("", x).strip())
         df["Street"] = df["Street"].str.lower()
 
@@ -313,12 +330,14 @@ class Geocoder:
 
     def create_gdf(self, df: pd.DataFrame) -> gpd.GeoDataFrame:
         """
-        Function simply creates gdf from the recognised geocoded geometries
+        Function simply creates gdf from the recognised geocoded geometries.
         """
 
         df["Location"] = df["addr_to_geocode"].progress_apply(Location().query)
         df = df.dropna(subset=["Location"])
-        df["geometry"] = df.Location.apply(lambda x: Point(x.longitude, x.latitude))
+        df["geometry"] = df.Location.apply(
+            lambda x: Point(x.longitude, x.latitude)
+        )
         df["Location"] = df.Location.apply(lambda x: x.address)
         gdf = gpd.GeoDataFrame(df, geometry="geometry", crs=Geocoder.global_crs)
 
@@ -327,8 +346,8 @@ class Geocoder:
     def set_global_repr_point(self, gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
         This function set the centroid (actually, representative point) of the
-        geocoded addresses to those texts that weren't geocoded (or didn't containe
-        any addresses according to the trained NER model).
+        geocoded addresses to those texts that weren't geocoded (or didn't
+        contain any addresses according to the trained NER model).
         """
 
         try:
@@ -344,7 +363,8 @@ class Geocoder:
         self, gdf: gpd.GeoDataFrame, initial_df: pd.DataFrame
     ) -> gpd.GeoDataFrame:
         """
-        This function merges geocoded df to the initial df in order to keep all original attributes
+        This function merges geocoded df to the initial df in order to keep
+        all original attributes.
         """
 
         initial_df.reset_index(drop=False, inplace=True)
@@ -367,7 +387,9 @@ class Geocoder:
         )
 
         gdf.drop(columns=["key_0"], inplace=True)
-        gdf = gpd.GeoDataFrame(gdf, geometry="geometry", crs=Geocoder.global_crs)
+        gdf = gpd.GeoDataFrame(
+            gdf, geometry="geometry", crs=Geocoder.global_crs
+        )
 
         return gdf
 

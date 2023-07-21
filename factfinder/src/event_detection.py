@@ -8,8 +8,6 @@ from bertopic import BERTopic
 from hdbscan import HDBSCAN
 from shapely.geometry import LineString
 from transformers.pipelines import pipeline
-from sklearn import preprocessing
-import numpy as np
 from umap import UMAP
 
 
@@ -43,7 +41,7 @@ class EventDetection:
 
     def _get_roads(self, city_name, city_crs) -> gpd.GeoDataFrame:
         """
-        Get the road network of a city as road links and roads
+        Get the road network of a city as road links and roads.
         """
         links = ox.graph_from_place(city_name, network_type="drive")
         links = ox.utils_graph.graph_to_gdfs(links, nodes=False).to_crs(
@@ -87,7 +85,7 @@ class EventDetection:
 
     def _collect_population(self) -> dict:
         """
-        Collect population data for each object (building, street, link)
+        Collect population data for each object (building, street, link).
         """
         buildings = self.buildings.copy()
         pops_global = {0: buildings.population_balanced.sum()}
@@ -189,7 +187,7 @@ class EventDetection:
 
     def _create_model(self, min_event_size):
         """
-        Create a topic model with a UMAP, HDBSCAN, and a BERTopic model
+        Create a topic model with a UMAP, HDBSCAN, and a BERTopic model.
         """
         umap_model = UMAP(
             n_neighbors=15,
@@ -229,9 +227,8 @@ class EventDetection:
     ):
         """
         Create a list of events for a given object
-        (building, street, link, total)
+        (building, street, link, total).
         """
-        buildings = self.buildings.copy()
         local_messages = messages[messages[target_column] == object_id]
         message_ids = local_messages.message_id.tolist()
         docs = local_messages.text.tolist()
@@ -249,11 +246,16 @@ class EventDetection:
             event_model = topic_model.get_topic_info()
             event_model["level"] = event_level
             event_model["object_id"] = str(object_id)
-            event_model["id"] = event_model.apply(lambda x: f"{str(x.Topic)}_{str(x.level)}_{str(x.object_id)}", axis=1)
+            event_model["id"] = event_model.apply(
+                lambda x: f"{str(x.Topic)}_{str(x.level)}_{str(x.object_id)}",
+                axis=1,
+            )
             try:
-                event_model["potential_population"] = population[event_level][object_id]
+                event_model["potential_population"] = population[event_level][
+                    object_id
+                ]
             except Exception:  # need to select type of error
-                event_model["potential_population"] = population['global'][0]
+                event_model["potential_population"] = population["global"][0]
 
             clustered_messages = pd.DataFrame(
                 data={"id": message_ids, "text": docs, "topic_id": topics}
@@ -427,25 +429,39 @@ class EventDetection:
             events_rebalanced.rebalanced_population.isna(),
             "rebalanced_population",
         ] = 0
-        events_rebalanced['population'] = events_rebalanced.rebalanced_population
+        events_rebalanced[
+            "population"
+        ] = events_rebalanced.rebalanced_population
         events_rebalanced.drop(columns=["rebalanced_population"], inplace=True)
         events_rebalanced.population = events_rebalanced.population.astype(int)
         events_rebalanced["population"] = (
-            events_rebalanced["population"] - events_rebalanced["population"].min()
+            events_rebalanced["population"]
+            - events_rebalanced["population"].min()
         ) / (
-            events_rebalanced["population"].max() - events_rebalanced["population"].min()
+            events_rebalanced["population"].max()
+            - events_rebalanced["population"].min()
+        )
+        events_rebalanced["population"] = (
+            pd.qcut(
+                events_rebalanced["population"],
+                q=10,
+                labels=False,
+                duplicates="drop",
             )
-        events_rebalanced['population'] = pd.qcut(events_rebalanced['population'], q=10, labels=False, duplicates='drop') / 10 #fix later
-        events_rebalanced.loc[events_rebalanced.population == 0, "population"] = 0.1 #fix later
+            / 10
+        )  # fix later
+        events_rebalanced.loc[
+            events_rebalanced.population == 0, "population"
+        ] = 0.1  # fix later
         events_rebalanced["risk"] = (
             events_rebalanced.intensity
             * (events_rebalanced.duration + 1)
             * events_rebalanced.importance
             * events_rebalanced.population
         )
-        events = events[[
-            'name', 'docs', 'level', 'id', 'risk', 'message_ids', 'geometry'
-            ]]
+        events = events[
+            ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
+        ]
         return events_rebalanced
 
     def _filter_outliers(self):
@@ -480,7 +496,7 @@ class EventDetection:
 
     def _prepare_messages(self):
         """
-        Prepare messages for export
+        Prepare messages for export.
         """
         messages = self.messages.copy()
         messages = messages.reset_index(drop=True)
