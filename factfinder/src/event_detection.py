@@ -459,7 +459,7 @@ class EventDetection:
             * events_rebalanced.importance
             * events_rebalanced.population
         )
-        events = events[
+        events_rebalanced = events_rebalanced[
             ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
         ]
         return events_rebalanced
