@@ -458,9 +458,9 @@ class EventDetection:
             * events_rebalanced.importance
             * events_rebalanced.population
         )
-        # events_rebalanced = events_rebalanced[
-        #     ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
-        # ]
+        events_rebalanced = events_rebalanced[
+            ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
+        ]
         return events_rebalanced
 
     def _filter_outliers(self):
