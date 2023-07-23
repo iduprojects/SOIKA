@@ -343,8 +343,8 @@ class EventDetection:
         events["duration"] = (events["duration"] - events["duration"].min()) / (
             events["duration"].max() - events["duration"].min()
         )
-        events.loc[events.intensity == 0, 'intensity'] = 0.1 #fix later
-        events.loc[events.duration.isna(), 'duration'] = 1 #fix later
+        events.loc[events.intensity == 0, "intensity"] = 0.1  # fix later
+        events.loc[events.duration.isna(), "duration"] = 1  # fix later
         events["risk"] = (
             events.intensity
             * events.duration
@@ -447,10 +447,14 @@ class EventDetection:
             events_rebalanced.population == 0, "population"
         ] = 0.0001  # fix later
         events_rebalanced.loc[
-            events_rebalanced.population.isna() & events_rebalanced.level.isin(['building', 'link']), "population"
+            events_rebalanced.population.isna()
+            & events_rebalanced.level.isin(["building", "link"]),
+            "population",
         ] = 0.0001  # fix later
         events_rebalanced.loc[
-            events_rebalanced.population.isna() & events_rebalanced.level.isin(['road', 'global']), "population"
+            events_rebalanced.population.isna()
+            & events_rebalanced.level.isin(["road", "global"]),
+            "population",
         ] = 1  # fix later
         events_rebalanced["risk"] = (
             events_rebalanced.intensity
