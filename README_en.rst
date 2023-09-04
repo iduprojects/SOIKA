@@ -1,4 +1,4 @@
-FactFinder
+SOIKA
 ==============
 
 .. |eng| image:: https://img.shields.io/badge/lang-en-red.svg
@@ -8,11 +8,11 @@ FactFinder
    :target: /README_ru.rst
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
-    :target: https://github.com/Text-Analytics/FactFinder/blob/master/LICENSE.md
+    :target: https://github.com/Text-Analytics/SOIKA/blob/master/LICENSE.md
     :alt: License
 
-.. |style| image:: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml/badge.svg
-    :target: https://github.com/Text-Analytics/FactFinder/actions/workflows/checks.yml
+.. |style| image:: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml/badge.svg
+    :target: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml
     :alt: Style checks
 
 .. start-badges
@@ -27,7 +27,7 @@ FactFinder
      - | |eng| |rus|
 .. end-badges
 
-**FactFinder** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
+**SOIKA** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
 
 It consists of several modules: classification, geolocation and risk detection.
 
@@ -44,7 +44,7 @@ In the geolocation module we propose ruBERT-based method of messages geolocation
 In the risk detection module... (in development)
 
 
-FactFinder Features
+SOIKA Features
 ==============
 
 - Ready-for-use tool for researchers or analytics who work with unstructured social data. Our library can assist with extracting facts from texts from social media without any additional software
@@ -54,7 +54,7 @@ FactFinder Features
 Contribution Guide
 ==================
 
-The contribution guide is available in this `repository <https://github.com/Text-Analytics/FactFinder/blob/master/CONTRIBUTING.md>`__.
+The contribution guide is available in this `repository <https://github.com/Text-Analytics/SOIKA/blob/master/CONTRIBUTING.md>`__.
 
 Acknowledgment
 ==============
