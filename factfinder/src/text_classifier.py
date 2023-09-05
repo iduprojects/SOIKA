@@ -21,7 +21,7 @@ class TextClassifier:
         )
 
     def run(self, t):
-        if isinstance(t,  str):
+        if isinstance(t, str):
             preds = pd.DataFrame(self.classifier(t, top_k=self.CATS_NUM))
             self.classifier.call_count = 0
             if self.CATS_NUM > 1:
