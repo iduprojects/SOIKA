@@ -31,7 +31,7 @@ class TextClassifier:
                 cats = preds["label"][0]
                 probs = preds["score"].round(3).astype(str)[0]
         else:
-            print('text is not string')
+            print("text is not string")
             cats = None
             probs = None
         return [cats, probs]
