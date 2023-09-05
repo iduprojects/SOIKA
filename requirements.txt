@@ -13,3 +13,4 @@ geopy==2.3.0
 shapely==2.0.1
 transformers==4.28.1
 bertopic==0.15.0
+sphinx_rtd_theme
