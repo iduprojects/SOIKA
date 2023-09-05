@@ -351,8 +351,12 @@ class EventDetection:
             * events.importance
             * events.population
         )
-        events['message_ids'] = events.message_ids.map(lambda x: ', '.join(list(set(x.split(', ')))))
-        events['docs'] = events.docs.map(lambda x: ', '.join(list(set(x.split(', ')))))
+        events["message_ids"] = events.message_ids.map(
+            lambda x: ", ".join(list(set(x.split(", "))))
+        )
+        events["docs"] = events.docs.map(
+            lambda x: ", ".join(list(set(x.split(", "))))
+        )
         return events
 
     def _get_event_connections(self) -> gpd.GeoDataFrame:

@@ -21,7 +21,7 @@ class TextClassifier:
         )
 
     def run(self, t):
-        if type(t) == str:
+        if isinstance(t, str):
             preds = pd.DataFrame(self.classifier(t, top_k=self.CATS_NUM))
             self.classifier.call_count = 0
             if self.CATS_NUM > 1:
@@ -31,7 +31,7 @@ class TextClassifier:
                 cats = preds["label"][0]
                 probs = preds["score"].round(3).astype(str)[0]
         else:
-            print('text is not string')
+            print("text is not string")
             cats = None
             probs = None
         return [cats, probs]
