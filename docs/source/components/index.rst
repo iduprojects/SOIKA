@@ -8,3 +8,4 @@ Components
    :maxdepth: 2
 
    geocoder
+   event_detection
