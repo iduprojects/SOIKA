@@ -3,7 +3,7 @@
 ![Your logo](https://i.ibb.co/qBjVx8N/soika.jpg)
 
 
-[![Documentation Status](https://readthedocs.org/projects/soika-2/badge/?version=latest)](https://soika-2.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/soika/badge/?version=latest)](https://soika.readthedocs.io/en/latest/?badge=latest)
 [![PythonVersion](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)](https://pypi.org/project/scikit-learn/)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
