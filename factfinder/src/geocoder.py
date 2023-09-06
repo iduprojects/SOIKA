@@ -72,6 +72,9 @@ class Location:
 
 
 class Streets:
+    """
+    test
+    """
     global_crs: int = 4326
 
     @staticmethod
@@ -105,6 +108,7 @@ class Streets:
 
     @staticmethod
     def graph_to_gdf(G_drive: nx.MultiDiGraph) -> gpd.GeoDataFrame:
+        
         gdf = ox.graph_to_gdfs(G_drive, nodes=False)
         gdf["name"].dropna(inplace=True)
         gdf = gdf[["name", "length", "geometry"]]
@@ -168,6 +172,9 @@ class Streets:
 
 
 class Geocoder:
+    """
+    test
+    """
     global_crs: int = 4326
 
     def __init__(

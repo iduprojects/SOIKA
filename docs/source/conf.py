@@ -20,7 +20,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 # -- Project information -----------------------------------------------------
 
 project = 'SOIKA'
-copyright = '2023-{}, NSS Lab'.format(datetime.datetime.now().year)
+copyright = '2023-{}, IDU'.format(datetime.datetime.now().year)
 author = 'IDU'
 
 # The full version, including alpha/beta/rc tags
@@ -56,13 +56,14 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-StandaloneHTMLBuilder.supported_image_types = [
-    'image/svg+xml',
-    'image/gif',
-    'image/png',
-    'image/jpeg'
-]
-html_theme = "sphinx_rtd_theme"
+# StandaloneHTMLBuilder.supported_image_types = [
+#     'image/svg+xml',
+#     'image/gif',
+#     'image/png',
+#     'image/jpeg'
+# ]
+
+html_theme = 'sphinx_rtd_theme'
 # html_logo = "/docs/img/gefest_logo.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
