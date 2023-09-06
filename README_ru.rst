@@ -33,7 +33,7 @@ SOIKA
 
 Библиотека состоит из нескольких модулей: двухуровневая классификация, геолокация и обнаружение рисков.
 
-.. image:: /docs/pipeline_rus.png
+.. image:: /docs/img/pipeline_rus.png
    :alt: The structure of the modeling pipeline
 
 В модуле классификации реализуется каскад из двух методов:
