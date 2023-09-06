@@ -9,3 +9,5 @@ Components
 
    geocoder
    event_detection
+   text_classifier_topics
+   text_classifier
