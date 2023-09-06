@@ -2,10 +2,10 @@ Contribution
 ============
 
 We welcome you to `check the existing
-issues <https://github.com/Text-Analytics/SOIKA/issues>`__ for bugs or
+issues <https://github.com/iduprojects/SOIKA/issues>`__ for bugs or
 enhancements to work on. If you have an idea for an extension to SOIKA,
 please `file a new
-issue <https://github.com/Text-Analytics/SOIKA/issues/new>`__ so we can
+issue <https://github.com/iduprojects/SOIKA/issues/new>`__ so we can
 discuss it.
 
 Make sure to familiarize yourself with the project layout before making
@@ -16,9 +16,9 @@ How to contribute
 -----------------
 
 The preferred way to contribute to SOIKA is to fork the `master
-repository <https://github.com/Text-Analytics/SOIKA/>`__ on GitHub:
+repository <https://github.com/iduprojects/SOIKA/>`__ on GitHub:
 
-1. Fork the `project repository <https://github.com/Text-Analytics/SOIKA>`__:
+1. Fork the `project repository <https://github.com/iduprojects/SOIKA>`__:
    click on the 'Fork' button near the top of the page. This creates a
    copy of the code under your account on the GitHub server.
 
@@ -84,11 +84,11 @@ necessary so we can efficiently review and accept your changes.
 If your contribution changes SOIKA in any way:
 
 -  Update the
-   `documentation <https://github.com/Text-Analytics/SOIKA/wiki>`__
+   `documentation <https://github.com/iduprojects/SOIKA/wiki>`__
    so all of your changes are reflected there.
 
 -  Update the
-   `README <https://github.com/Text-Analytics/SOIKA/blob/master/README.rst>`__
+   `README <https://github.com/iduprojects/SOIKA/blob/master/README.rst>`__
    if anything there has changed.
 
 If your contribution involves any code changes:
@@ -110,7 +110,7 @@ If your contribution requires a new library dependency:
    changes because we want to keep SOIKA easy to install.
 
 -  Add the required version of the library to
-   `requirements.txt <https://github.com/Text-Analytics/SOIKA/blob/master/requirements.txt>`__
+   `requirements.txt <https://github.com/iduprojects/SOIKA/blob/master/requirements.txt>`__
 
 Contribute to the documentation
 -------------------------------
@@ -121,7 +121,7 @@ automodule:: <module_name> section which describes all the code in the module.
 
 -  If a new package with several scripts:
 
-   1. Go to `docs/source/soika <https://github.com/Text-Analytics/SOIKA/tree/master/docs>`__ and create new your_name_for_file.rst file.
+   1. Go to `docs/source/soika <https://github.com/iduprojects/SOIKA/tree/master/docs>`__ and create new your_name_for_file.rst file.
 
    2. Add a Header underlined with “=” sign. It’s crucial.
 
@@ -142,7 +142,7 @@ automodule:: <module_name> section which describes all the code in the module.
 
 -  If a new module to the existed package:
 
-    Most of the sections are already described in `docs/source/soika <https://github.com/Text-Analytics/SOIKA/tree/master/docs>`__ , so you can:
+    Most of the sections are already described in `docs/source/soika <https://github.com/iduprojects/SOIKA/tree/master/docs>`__ , so you can:
 
    -  choose the most appropriate and repeat 3-d step from the previous section.
    -  or create a new one and repeat 2-3 steps from the previous section.

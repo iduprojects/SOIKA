@@ -15,6 +15,10 @@ SOIKA
     :target: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml
     :alt: Style checks
 
+.. |documentation| image:: https://readthedocs.org/projects/soika-2/badge/?version=latest
+      :target: https://soika-2.readthedocs.io/en/latest/?badge=latest
+      :alt: Documentation Status
+
 .. start-badges
 .. list-table::
    :stub-columns: 1
@@ -25,6 +29,8 @@ SOIKA
      - | |license|
    * - languages
      - | |eng| |rus|
+   * - documentation
+     - | |documentation|
 .. end-badges
 
 **SOIKA** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 

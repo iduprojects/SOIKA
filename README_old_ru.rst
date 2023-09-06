@@ -14,6 +14,9 @@ SOIKA
 .. |style| image:: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml/badge.svg
     :target: https://github.com/Text-Analytics/SOIKA/actions/workflows/checks.yml
     :alt: Style checks
+.. |documentation| image:: https://readthedocs.org/projects/soika-2/badge/?version=latest
+      :target: https://soika-2.readthedocs.io/en/latest/?badge=latest
+      :alt: Documentation Status
 
 .. start-badges
 .. list-table::
@@ -25,6 +28,8 @@ SOIKA
      - | |license|
    * - languages
      - | |eng| |rus|
+   * - documentation
+     - | |documentation|
 .. end-badges
 
 **SOIKA** - библиотека, предназначенная для выявления точек общественной активности, объектов городской среды, а также прогнозирования социальных рисков, связанных с этими объектами.
