@@ -48,7 +48,7 @@ It consists of several modules: classification, geolocation and risk detection.
 
 ## Installation
 
-All details about first steps with GEFEST might be found in the [install guide](https://soika.readthedocs.io/en/latest/soika/installation.html)
+All details about first steps with SOIKA might be found in the [install guide](https://soika.readthedocs.io/en/latest/soika/installation.html)
 and in the [tutorial for novices](https://soika.readthedocs.io/en/latest/soika/quickstart.html)
 
 ## Project Structure
