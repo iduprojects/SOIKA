@@ -1,6 +1,6 @@
 About us
 ========
 
-The SOIKA is developed and maintained by the `NSS Lab <https://itmo-nss-team.github.io/>`__ team.
+The SOIKA is developed and maintained by the `IDU <https://idu.itmo.ru/en/contacts/contacts.htm/>`__ team.
 
-Our laboratory is part of the National Center for Cognitive Technologies (ITMO University, Russia), which provides cutting-edge software and algorithmic solutions. We focus on natural systems simulations, generative design of real and virtual objects, data-driven modeling, automated machine learning.
+The Institute of Design and Urbanism (IDU) is an educational and project-research unit of ITMO University aimed at developing interdisciplinary competencies and scientific approach for solving complex urban problems using information technologies based on the principles of sustainability and social orientation.

@@ -24,7 +24,7 @@ It consists of several modules: classification, geolocation and risk detection.
 
 - In the geolocation module we propose ruBERT-based method of messages geolocation. It provides combination of pre-trained NER model to extract location (district, street and house number) from text and approximate string matching to assign coordinates from open data portal OpenStreetMaps to this location.
 
-- In the risk detection module... (in development)
+- In the risk detection module uses the data obtained with the previous modules. Texts with timestamps, spatial and functional characteristics are passed to the input of a multi-level algorithm based on BERTopic, resulting in a set of interrelated situations. Their potential risk assessment is also possible with the help of additional data.
 
 ## Table of Contents
 
