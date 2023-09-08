@@ -3,7 +3,7 @@ name = "factfinder"
 version = "0.1.0"
 description = ""
 authors = ["pacificus <masterkristall@gmail.com>"]
-readme = "README.md"
+readme = "README.rst"
 packages = [{include = "factfinder"}]
 
 [tool.poetry.dependencies]
