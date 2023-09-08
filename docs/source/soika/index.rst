@@ -7,4 +7,6 @@ SOIKA
    :glob:
    :maxdepth: 2
 
+   soika
+   installation
    quickstart

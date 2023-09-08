@@ -2,7 +2,7 @@
 Event detection
 =========
 
-class  EventDetection
+class EventDetection
 ~~~~~~~~~~~~~~
 
 .. autoclass:: factfinder.src.event_detection.EventDetection
