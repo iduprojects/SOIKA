@@ -11,7 +11,7 @@
 
 **SOIKA** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
 
-It consists of several modules: classification, geolocation and risk detection.
+SOIKA consists of several modules: classification, geolocation and risk detection.
 
 **Classification module**
 
