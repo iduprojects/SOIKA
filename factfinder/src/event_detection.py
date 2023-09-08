@@ -179,12 +179,10 @@ class EventDetection:
                 "cats",
             ]
         ].dropna(subset="text")
-        messages['cats'] = messages.cats.astype(str).str.split('; ').map(
-            lambda x: x[0]
-            )
-        messages["importance"] = messages["cats"].map(
-            self.functions_weights
+        messages["cats"] = (
+            messages.cats.astype(str).str.split("; ").map(lambda x: x[0])
         )
+        messages["importance"] = messages["cats"].map(self.functions_weights)
         messages["importance"].fillna(0.16, inplace=True)
         messages["global_id"] = 0
         return messages
