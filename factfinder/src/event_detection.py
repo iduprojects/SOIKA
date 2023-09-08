@@ -13,8 +13,9 @@ from umap import UMAP
 
 class EventDetection:
     """
-    test
+    This class is aimed to generate a list of events and their connection for a targeted city.
     """
+
     def __init__(self):
         self.population_filepath = None
         self.levels = ["building", "link", "road", "global"]
@@ -51,7 +52,7 @@ class EventDetection:
         Returns:
             links (GeoDataFrame): GeoDataFrame with the city's road links and roads.
 
-        
+
         """
         links = ox.graph_from_place(city_name, network_type="drive")
         links = ox.utils_graph.graph_to_gdfs(links, nodes=False).to_crs(
