@@ -12,6 +12,9 @@ from umap import UMAP
 
 
 class EventDetection:
+    """
+    test
+    """
     def __init__(self):
         self.population_filepath = None
         self.levels = ["building", "link", "road", "global"]
@@ -42,6 +45,13 @@ class EventDetection:
     def _get_roads(self, city_name, city_crs) -> gpd.GeoDataFrame:
         """
         Get the road network of a city as road links and roads.
+        Args:
+            city_name (string): The name of the city.
+            city_crs (int): The spatial reference code (CRS) of the city.
+        Returns:
+            links (GeoDataFrame): GeoDataFrame with the city's road links and roads.
+
+        
         """
         links = ox.graph_from_place(city_name, network_type="drive")
         links = ox.utils_graph.graph_to_gdfs(links, nodes=False).to_crs(
@@ -63,6 +73,11 @@ class EventDetection:
     def _get_buildings(self) -> gpd.GeoDataFrame:
         """
         Get the buildings of a city as a GeoDataFrame
+        Args:
+            links(GeoDataFrame): GeoDataFrame with the city's road links and roads.
+            filepath (string): The path to the GeoJSON file with building data. The default is set to 'population.geojson'.
+        Returns:
+            buildings (GeoDataFrame): GeoDataFrame with the city's buildings.
         """
         buildings = gpd.read_file(self.population_filepath)
         buildings = buildings[
