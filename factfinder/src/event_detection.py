@@ -179,9 +179,13 @@ class EventDetection:
                 "cats",
             ]
         ].dropna(subset="text")
-        messages["importance"] = messages["cats"].replace(
+        messages['cats'] = messages.cats.astype(str).str.split('; ').map(
+            lambda x: x[0]
+            )
+        messages["importance"] = messages["cats"].map(
             self.functions_weights
         )
+        messages["importance"].fillna(0.16, inplace=True)
         messages["global_id"] = 0
         return messages
 
@@ -451,12 +455,12 @@ class EventDetection:
         )
         events_rebalanced.loc[
             events_rebalanced.population == 0, "population"
-        ] = 0.0001  # fix later
+        ] = 0.01  # fix later
         events_rebalanced.loc[
             events_rebalanced.population.isna()
             & events_rebalanced.level.isin(["building", "link"]),
             "population",
-        ] = 0.0001  # fix later
+        ] = 0.01  # fix later
         events_rebalanced.loc[
             events_rebalanced.population.isna()
             & events_rebalanced.level.isin(["road", "global"]),
@@ -466,7 +470,6 @@ class EventDetection:
             events_rebalanced.intensity
             * (events_rebalanced.duration + 1)
             * events_rebalanced.importance
-            * events_rebalanced.population
         )
         events_rebalanced = events_rebalanced[
             ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
