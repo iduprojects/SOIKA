@@ -173,7 +173,7 @@ class Streets:
 
 class Geocoder:
     """
-    test
+    This class provides a functionality of simple geocoder
     """
     global_crs: int = 4326
 
