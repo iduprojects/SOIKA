@@ -80,7 +80,9 @@ class Streets:
     global_crs: int = 4326
 
     @staticmethod
-    def get_city_bounds(osm_city_name: str, osm_city_level: int) -> gpd.GeoDataFrame:
+    def get_city_bounds(
+        osm_city_name: str, osm_city_level: int
+    ) -> gpd.GeoDataFrame:
         """
         Method retrieves the boundary of a specified city from OSM
         using Overpass API and returns a GeoDataFrame representing the boundary as a polygon.
@@ -95,7 +97,9 @@ class Streets:
         out geom;
         """
 
-        result = requests.get(overpass_url, params={"data": overpass_query}).json()
+        result = requests.get(
+            overpass_url, params={"data": overpass_query}
+        ).json()
         resp = osm2geojson.json2geojson(result)
         city_bounds = gpd.GeoDataFrame.from_features(resp["features"]).set_crs(
             Streets.global_crs
@@ -254,14 +258,18 @@ class Geocoder:
 
         # add a column for each case with the respective form of the word
         for case in cases:
-            street_names_df[case] = street_names_df["street_name"].progress_apply(
+            street_names_df[case] = street_names_df[
+                "street_name"
+            ].progress_apply(
                 lambda x: morph.parse(x)[0].inflect({case}).word
                 if morph.parse(x)[0].inflect({case})
                 else None
             )
         return street_names_df
 
-    def find_word_form(self, df: pd.DataFrame, strts_df: pd.DataFrame) -> pd.DataFrame:
+    def find_word_form(
+        self, df: pd.DataFrame, strts_df: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         In the russian language any word has different forms.
         Since addresses are extracted from the texts in social networks
@@ -288,7 +296,10 @@ class Geocoder:
                         strts_df[col] == search_val, "street"
                     ].values
                     streets_full = [
-                        street + f" {val_num}" + f" {self.osm_city_name}" + " Россия"
+                        street
+                        + f" {val_num}"
+                        + f" {self.osm_city_name}"
+                        + " Россия"
                         for street in streets_full
                     ]
 
@@ -322,7 +333,9 @@ class Geocoder:
         else:
             return "global"
 
-    def get_street(self, df: pd.DataFrame, text_column: str) -> gpd.GeoDataFrame:
+    def get_street(
+        self, df: pd.DataFrame, text_column: str
+    ) -> gpd.GeoDataFrame:
         """
         Function calls NER model and post-process result in order to extract
         the address mentioned in the text.
@@ -339,7 +352,9 @@ class Geocoder:
         df["Street"] = df["Street"].apply(lambda x: pattern1.sub(r"\1 \2\3", x))
 
         pattern2 = re.compile(r"\d+")
-        df["Numbers"] = df["Street"].apply(lambda x: " ".join(pattern2.findall(x)))
+        df["Numbers"] = df["Street"].apply(
+            lambda x: " ".join(pattern2.findall(x))
+        )
         df["Street"] = df["Street"].apply(lambda x: pattern2.sub("", x).strip())
         df["Street"] = df["Street"].str.lower()
 
@@ -352,7 +367,9 @@ class Geocoder:
 
         df["Location"] = df["addr_to_geocode"].progress_apply(Location().query)
         df = df.dropna(subset=["Location"])
-        df["geometry"] = df.Location.apply(lambda x: Point(x.longitude, x.latitude))
+        df["geometry"] = df.Location.apply(
+            lambda x: Point(x.longitude, x.latitude)
+        )
         df["Location"] = df.Location.apply(lambda x: x.address)
         gdf = gpd.GeoDataFrame(df, geometry="geometry", crs=Geocoder.global_crs)
 
@@ -402,7 +419,9 @@ class Geocoder:
         )
 
         gdf.drop(columns=["key_0"], inplace=True)
-        gdf = gpd.GeoDataFrame(gdf, geometry="geometry", crs=Geocoder.global_crs)
+        gdf = gpd.GeoDataFrame(
+            gdf, geometry="geometry", crs=Geocoder.global_crs
+        )
 
         return gdf
 
