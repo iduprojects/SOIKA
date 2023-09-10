@@ -14,6 +14,7 @@ from umap import UMAP
 class EventDetection:
     """
     test
+    TODO: make appropriate docstring
     """
 
     def __init__(self):
@@ -50,7 +51,8 @@ class EventDetection:
             city_name (string): The name of the city.
             city_crs (int): The spatial reference code (CRS) of the city.
         Returns:
-            links (GeoDataFrame): GeoDataFrame with the city's road links and roads.
+            links (GeoDataFrame): GeoDataFrame with the city's
+            road links and roads.
 
 
         """
@@ -74,9 +76,6 @@ class EventDetection:
     def _get_buildings(self) -> gpd.GeoDataFrame:
         """
         Get the buildings of a city as a GeoDataFrame
-        Args:
-            links(GeoDataFrame): GeoDataFrame with the city's road links and roads.
-            filepath (string): The path to the GeoJSON file with building data. The default is set to 'population.geojson'.
         Returns:
             buildings (GeoDataFrame): GeoDataFrame with the city's buildings.
         """
@@ -353,7 +352,7 @@ class EventDetection:
             )
         )
         events.message_ids = events.message_ids.map(
-            lambda x: ", ".join([str(id) for id in x])
+            lambda x: ", ".join([str(idx) for idx in x])
         )
         events["intensity"] = (
             events["intensity"] - events["intensity"].min()

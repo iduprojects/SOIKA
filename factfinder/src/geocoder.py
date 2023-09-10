@@ -73,8 +73,9 @@ class Location:
 
 class Streets:
     """
-    This class encapsulates functionality for retrieving street data for a specified city
-    from OSM and processing it to extract useful information for geocoding purposes.
+    This class encapsulates functionality for retrieving street data
+    for a specified city from OSM and processing it to extract useful
+    information for geocoding purposes.
     """
 
     global_crs: int = 4326
@@ -85,7 +86,8 @@ class Streets:
     ) -> gpd.GeoDataFrame:
         """
         Method retrieves the boundary of a specified city from OSM
-        using Overpass API and returns a GeoDataFrame representing the boundary as a polygon.
+        using Overpass API and returns a GeoDataFrame representing
+        the boundary as a polygon.
         """
         overpass_url = "http://overpass-api.de/api/interpreter"
         overpass_query = f"""
@@ -109,9 +111,10 @@ class Streets:
     @staticmethod
     def get_drive_graph(city_bounds: gpd.GeoDataFrame) -> nx.MultiDiGraph:
         """
-        Method uses the OSMnx library to retrieve the street network for a specified city
-        and returns it as a NetworkX MultiDiGraph object, where each edge represents a street segment
-        and each node represents an intersection.
+        Method uses the OSMnx library to retrieve the street network for a
+        specified city and returns it as a NetworkX MultiDiGraph object, where
+        each edge represents a street segment and each node represents
+        an intersection.
         """
 
         G_drive = ox.graph_from_polygon(
@@ -124,8 +127,8 @@ class Streets:
     def graph_to_gdf(G_drive: nx.MultiDiGraph) -> gpd.GeoDataFrame:
         """
         Method converts the street network from a NetworkX MultiDiGraph object
-        to a GeoDataFrame representing the edges (streets) with columns for street name,
-        length, and geometry.
+        to a GeoDataFrame representing the edges (streets) with columns
+        for street name, length, and geometry.
         """
 
         gdf = ox.graph_to_gdfs(G_drive, nodes=False)
@@ -139,7 +142,8 @@ class Streets:
     @staticmethod
     def get_street_names(gdf: gpd.GeoDataFrame):
         """
-        Method extracts the unique street names from a GeoDataFrame of street segments.
+        Method extracts the unique street names from a
+        GeoDataFrame of street segments.
         """
 
         names = set(gdf["name"].explode().dropna())
