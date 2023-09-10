@@ -33,4 +33,6 @@ jobs:
         flake8 factfinder
         flake8 tests
     - name: isort
-      run: isort . --check --diff
+      run: |
+        isort factfinder --check --diff
+        isort tests --check --diff
