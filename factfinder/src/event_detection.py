@@ -15,6 +15,7 @@ class EventDetection:
     """
     test
     """
+
     def __init__(self):
         self.population_filepath = None
         self.levels = ["building", "link", "road", "global"]
@@ -51,7 +52,7 @@ class EventDetection:
         Returns:
             links (GeoDataFrame): GeoDataFrame with the city's road links and roads.
 
-        
+
         """
         links = ox.graph_from_place(city_name, network_type="drive")
         links = ox.utils_graph.graph_to_gdfs(links, nodes=False).to_crs(
@@ -194,9 +195,11 @@ class EventDetection:
                 "cats",
             ]
         ].dropna(subset="text")
-        messages["importance"] = messages["cats"].replace(
-            self.functions_weights
+        messages["cats"] = (
+            messages.cats.astype(str).str.split("; ").map(lambda x: x[0])
         )
+        messages["importance"] = messages["cats"].map(self.functions_weights)
+        messages["importance"].fillna(0.16, inplace=True)
         messages["global_id"] = 0
         return messages
 
@@ -466,12 +469,12 @@ class EventDetection:
         )
         events_rebalanced.loc[
             events_rebalanced.population == 0, "population"
-        ] = 0.0001  # fix later
+        ] = 0.01  # fix later
         events_rebalanced.loc[
             events_rebalanced.population.isna()
             & events_rebalanced.level.isin(["building", "link"]),
             "population",
-        ] = 0.0001  # fix later
+        ] = 0.01  # fix later
         events_rebalanced.loc[
             events_rebalanced.population.isna()
             & events_rebalanced.level.isin(["road", "global"]),
@@ -481,7 +484,6 @@ class EventDetection:
             events_rebalanced.intensity
             * (events_rebalanced.duration + 1)
             * events_rebalanced.importance
-            * events_rebalanced.population
         )
         events_rebalanced = events_rebalanced[
             ["name", "docs", "level", "id", "risk", "message_ids", "geometry"]
