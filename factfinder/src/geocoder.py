@@ -1,6 +1,6 @@
 """
 This module is aimed to provide necessary tools to find mentioned
-location in the text.
+location in the text. 
 In this scenario texts are comments in social networks (e.g. Vkontakte).
 Thus the model was trained on the corpus of comments on Russian language.
 """
@@ -156,7 +156,7 @@ class Streets:
         """
         This function drops parts of street names that are not the name
         of the street (e.g. avenue).
-        """
+        """ 
 
         try:
             lst = re.split(
@@ -201,7 +201,7 @@ class Streets:
 
 class Geocoder:
     """
-    test
+    This class provides a functionality of simple geocoder
     """
 
     global_crs: int = 4326

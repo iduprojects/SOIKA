@@ -11,20 +11,34 @@
 
 **SOIKA** is a library aimed at identifying points of public activity and related objects of the urban environment, as well as forecasting social risks associated with objects of public activity, based on the application of natural language analysis (NLP) methods to text messages of citizens in open communication platforms. 
 
-It consists of several modules: classification, geolocation and risk detection.
+SOIKA consists of several modules: classification, geolocation and risk detection.
 
-**The structure of the modeling pipeline**
+**Classification module**
 
-![Pypline](/docs/img/pipeline_en.png )
+For the module, a pre-designated set of citizens’ appeals on urban issues was used. Based on the set, the [BERT model](https://huggingface.co/cointegrated/rubert-tiny) was additionally trained for classification. The final f-score is 0.79. The marked classes include such city functions and industries as housing and communal services, landscaping, safety, transport, roads, healthcare, education, social protection, construction, waste management, ecology, and energy.
 
-- In the classification module we propose cascade with two classification methods: 
+[Link to the model](https://huggingface.co/Sandrro/text_to_function_v2)
 
-  - First one is based on pre-trained spacy model (later will be replaced with BERT) and its goal is to determine main city function which is affected by a problem described in the complaint, for example, communal services or environmental protrection. 
-  - Second one assigns complaint to one of pre-determined topic clusters. These clusters are generated with topic modelling algorithm for each city function and assessed by experts in these functions.
+**Geolocation module**
 
-- In the geolocation module we propose ruBERT-based method of messages geolocation. It provides combination of pre-trained NER model to extract location (district, street and house number) from text and approximate string matching to assign coordinates from open data portal OpenStreetMaps to this location.
+Named-entity recognition (NER) is used to extract addresses from messages. The [BERT (rubert) model](https://huggingface.co/cointegrated/rubert-tiny) was chosen for training, which allowed taking into account the context of the sentence before and after the search word. The flair framework is used to define named entities. The final f-score of the model is 0.81. The trained model allows obtaining the street and the house number from unstructured text (if specified). Next, toponyms are brought into their initial form and geocoded using Nominatim.
 
-- In the risk detection module uses the data obtained with the previous modules. Texts with timestamps, spatial and functional characteristics are passed to the input of a multi-level algorithm based on BERTopic, resulting in a set of interrelated situations. Their potential risk assessment is also possible with the help of additional data.
+[Link to the model](https://huggingface.co/Geor111y/flair-ner-addresses-extractor)
+
+**Event modeling and risk detection module**
+
+This module is used to generate events. An event is an object that has temporal, spatial, and functional (semantic) characteristics and influences the citizens’ lives. For this reason, to model it, you either need to use the above modules for a set of text data with timestamps, or prepare similar spatial data yourself. To simulate an event, you either need to apply the above-described modules to a set of text data with timestamps, or prepare similar spatial data yourself.
+
+![mat](/docs/img/mathematics.png)
+
+Within the module, an algorithm based on BERTopic is applied to texts linked to a spatial city model at 4 levels: global, street, street section, and building. This makes it possible to track connections between particular cases and the general issue, as well as various events among themselves. Connections are formed on the basis of common texts in different spatial-semantic clusters. At the last stage, the risk of events is calculated as the degree of its impact on the city population.
+
+Risk is calculated using the following formula:  
+R = idw, where  
+i – intensity  
+d – duration  
+w – significance
+
 
 ## Table of Contents
 
