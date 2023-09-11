@@ -3,6 +3,11 @@ from transformers import pipeline
 
 
 class TextClassifierTopics:
+    """
+    This class is aimed to classify input texts into themes, or structured types of events. It uses a Huggingface transformer model trained on rubert-tiny.
+    In many cases count of messages per theme was too low to efficiently train, so we used synthetic themes based on the categories as upper level (for example, 'unknown_ЖКХ')
+    """
+
     def __init__(
         self,
         repository_id="Sandrro/text_to_subfunction_v10",
@@ -21,6 +26,11 @@ class TextClassifierTopics:
         )
 
     def run(self, t):
+        """
+        This method takes a text as input and returns the predicted themes and probabilities.
+        :param t: text to classify
+        :return: list of predicted themes and probabilities
+        """
         preds = pd.DataFrame(self.classifier(t, top_k=self.CATS_NUM))
         self.classifier.call_count = 0
         if self.CATS_NUM > 1:

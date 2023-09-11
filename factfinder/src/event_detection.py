@@ -13,8 +13,7 @@ from umap import UMAP
 
 class EventDetection:
     """
-    test
-    TODO: make appropriate docstring
+    This class is aimed to generate a list of events and their connection for a targeted city.
     """
 
     def __init__(self):
