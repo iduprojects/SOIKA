@@ -14,6 +14,7 @@ from umap import UMAP
 class EventDetection:
     """
     test
+    TODO: make appropriate docstring
     """
 
     def __init__(self):
