@@ -36,7 +36,7 @@ Within the module, an algorithm based on BERTopic is applied to texts linked to 
 Risk is calculated using the following formula:  
 R = idw, where  
 i – intensity (number of distinct text per event)  
-d – duration  (number of days when event was active)
+d – duration  (number of days when event was active)  
 w – significance (mean value of negativity in texts by city functions, calculated by methods of sentiment analysis)
 
 
