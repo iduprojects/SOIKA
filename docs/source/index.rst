@@ -1,4 +1,4 @@
-Welcome to GEFEST's documentation!
+Welcome to SOIKA documentation!
 ==================================
 
 .. container::
