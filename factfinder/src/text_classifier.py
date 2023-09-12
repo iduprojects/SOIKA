@@ -24,7 +24,7 @@ class TextClassifier:
             device=device_type,
         )
 
-    def run(self, t) -> List[str]:
+    def run(self, t):
         """
         This method takes a text as input and returns the predicted categories and probabilities.
         :param t: text to classify
