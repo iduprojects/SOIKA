@@ -156,7 +156,7 @@ class Streets:
         """
         This function drops parts of street names that are not the name
         of the street (e.g. avenue).
-        """ 
+        """
 
         try:
             lst = re.split(
