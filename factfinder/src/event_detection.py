@@ -4,6 +4,7 @@ from itertools import chain, combinations
 import geopandas as gpd
 import osmnx as ox
 import pandas as pd
+import numpy as np
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
 from shapely.geometry import LineString
@@ -13,10 +14,12 @@ from umap import UMAP
 
 class EventDetection:
     """
-    This class is aimed to generate a list of events and their connection for a targeted city.
+    This class is aimed to generate events and their connections.
+    It is based on the application of semantic clustering method (BERTopic)
+    on the texts in the context of urban spatial model
     """
-
     def __init__(self):
+        np.random.seed(42)
         self.population_filepath = None
         self.levels = ["building", "link", "road", "global"]
         self.levels_scale = dict(zip(self.levels, list(range(2, 10, 2))))
@@ -51,8 +54,6 @@ class EventDetection:
             city_crs (int): The spatial reference code (CRS) of the city.
         Returns:
             links (GeoDataFrame): GeoDataFrame with the city's road links and roads.
-
-
         """
         links = ox.graph_from_place(city_name, network_type="drive")
         links = ox.utils_graph.graph_to_gdfs(links, nodes=False).to_crs(
