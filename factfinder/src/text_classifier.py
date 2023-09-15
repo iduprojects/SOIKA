@@ -3,6 +3,10 @@ from transformers import pipeline
 
 
 class TextClassifier:
+    """
+    This class is aimed to classify input texts into categories, or city functions. It uses a Huggingface transformer model trained on rubert-tiny
+    """
+
     def __init__(
         self,
         repository_id="Sandrro/text_to_function_v2",
@@ -21,6 +25,11 @@ class TextClassifier:
         )
 
     def run(self, t):
+        """
+        This method takes a text as input and returns the predicted categories and probabilities.
+        :param t: text to classify
+        :return: list of predicted categories and probabilities
+        """
         if isinstance(t, str):
             preds = pd.DataFrame(self.classifier(t, top_k=self.CATS_NUM))
             self.classifier.call_count = 0

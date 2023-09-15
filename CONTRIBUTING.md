@@ -49,7 +49,7 @@ $ git clone
 3. Install your local copy into a virtualenv. Assuming you have venv installed, this is how you set up your fork for local development:
 
 ```
-$ cd FactFinder/
+$ cd SOIKA/
 $ python3 -m venv env
 $ source env/bin/activate
 $ pip install -e .
@@ -65,9 +65,9 @@ Now you can make your changes locally.
 5. When you’re done making changes, check that your changes pass black, isort, flake8, and the tests:
 
 ```
-$ black factfinder
-$ isort factfinder
-$ flake8 factfinder
+$ black SOIKA
+$ isort SOIKA
+$ flake8 SOIKA
 $ pytest
 ```
 6. Commit your changes and push your branch to GitHub:
@@ -97,9 +97,9 @@ If you are adding a new dependency, please make sure it is added to `pyproject.t
 We use `black`, `isort`, `flake8` to enforce a consistent code style. Please make sure your code is compliant by running these tools before submitting a pull request.
 
 ```
-black factfinder
-isort factfinder
-flake8 factfinder
+black SOIKA
+isort SOIKA
+flake8 SOIKA
 ```
 
 ## Docstrings

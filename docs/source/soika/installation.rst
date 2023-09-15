@@ -5,6 +5,3 @@ Installation from GitHub
   | pip install -r requirements.txt
   | pytest -s test/
 
-.. Installation from PyPI
-.. ======================
-..   | pip install gefest

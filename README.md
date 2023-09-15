@@ -35,9 +35,9 @@ Within the module, an algorithm based on BERTopic is applied to texts linked to 
 
 Risk is calculated using the following formula:  
 R = idw, where  
-i – intensity  
-d – duration  
-w – significance
+i – intensity (number of distinct text per event)  
+d – duration  (number of days when event was active)  
+w – significance (mean value of negativity in texts by city functions, calculated by methods of sentiment analysis)
 
 
 ## Table of Contents
@@ -79,11 +79,11 @@ The repository includes the following directories:
 ## Examples
 You are free to use your own data, but it should match specification classes. Next examples will help to get used to the library:
 
-1. [Classifier](examples/classifier_example.ipynb) - text
-2. [Event detection](examples/event_detection_example.ipynb) -text
-3. [Geocoder](examples/geocoder_example.ipynb) - text
-4. [Topic classifier](examples/topic_classifier_example.ipynb) - text
-5. [Pipeline example](examples/pipeline_example.ipynb) - text
+1. [Classifier](examples/classifier_example.ipynb) - how to use city functions classifier
+2. [Event detection](examples/event_detection_example.ipynb) - how to generate events from prepared data
+3. [Geocoder](examples/geocoder_example.ipynb) - how to extract toponymes and get their coordinates
+4. [Topic classifier](examples/topic_classifier_example.ipynb) - how to use classifier for various themes of events
+5. [Pipeline example](examples/pipeline_example.ipynb) - how to generate events from texts with use of all of the modules descripted above
 
 
 

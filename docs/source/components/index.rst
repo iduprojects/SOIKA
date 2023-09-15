@@ -1,7 +1,7 @@
 Components
 ==========
 
-**That is about modules into GEFEST**
+**That is about modules into SOIKA**
 
 .. toctree::
    :glob:
