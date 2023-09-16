@@ -95,7 +95,7 @@ We have a [documentation](https://soika.readthedocs.io/en/latest/?badge=latest),
 
 To start developing the library, one must perform following actions:
 
-1. Clone repository (`git clone https://github.com/iduprojects/masterplanning`)
+1. Clone repository (`git clone https://github.com/iduprojects/SOIKA`)
 2. (optionally) create a virtual environment as the library demands exact packages versions: `python -m venv venv` and activate it.
 3. Install the library in editable mode: `python -m pip install -e '.[dev]' --config-settings editable_mode=strict`
 4. Install pre-commit hooks: `pre-commit install`
