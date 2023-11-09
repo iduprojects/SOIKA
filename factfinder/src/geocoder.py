@@ -283,7 +283,7 @@ class Geocoder:
             return pd.Series([None, None])
     
     # Блок с Наташей
-    exceptions = pd.merge(pd.read_csv("SOIKA\factfinder\src\exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv("SOIKA\factfinder\src\exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
+    exceptions = pd.merge(pd.read_csv("SOIKA/factfinder/src/exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv("SOIKA/factfinder/src/exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
     def get_ner_address_natasha(row, exceptions, text_col): #input: string, list, series... output: string
         if row["Street"] == None or row["Street"] == np.nan:
             i = row[text_col]
