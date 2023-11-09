@@ -279,7 +279,7 @@ class Geocoder:
                 .replace('"', "")
             )
             score = round(sentence.get_labels("ner")[0].score, 3)
-            if score>0.9:
+            if score > 0.7:
                 return pd.Series([res, score])
             else:
                 return pd.Series([None, None])
