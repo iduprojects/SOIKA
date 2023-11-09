@@ -283,11 +283,11 @@ class Geocoder:
             return pd.Series([None, None])
     
     # Блок с Наташей
-    exceptions = pd.merge(pd.read_csv(r"C:\Users\USER\SOIKA\factfinder\src\exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv(r"C:\Users\USER\SOIKA\factfinder\src\exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
-    def function(row, exceptions, text_col):
+    exceptions = pd.merge(pd.read_csv("exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv("exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
+    def get_ner_address_natasha(row, exceptions, text_col): #input: string, list, series... output: string
         if row["Street"] == None or row["Street"] == np.nan:
             i = row[text_col]
-            location_f = []
+            location_final = []
             i = re.sub(r'\[.*?\]', '', i)
             doc = Doc(i)
             doc.segment(segmenter)
@@ -299,11 +299,11 @@ class Geocoder:
             location = list(filter(lambda x: x.type == 'LOC', doc.spans))
             for span in location:
                 if span.normal.lower() not in exceptions['Сокращенное наименование'].str.lower().values:
-                    location_f.append(span)
-            location_f = [(span.text) for span in location_f]
-            if not location_f:
+                    location_final.append(span)
+            location_final = [(span.text) for span in location_final]
+            if not location_final:
                 return None
-            return location_f[0]
+            return location_final[0]
         else:
             return row["Street"]
     
@@ -411,7 +411,7 @@ class Geocoder:
             lambda t: self.extract_ner_street(t)
         )
         df["Street"] = df[[text_column,"Street"]].progress_apply(
-            lambda row: Geocoder.function(row, self.exceptions, text_column), axis=1)
+            lambda row: Geocoder.get_ner_address_natasha(row, self.exceptions, text_column), axis=1)
         df = df[df.Street.notna()]
         df = df[df["Street"].str.contains("[а-яА-Я]")]
 
