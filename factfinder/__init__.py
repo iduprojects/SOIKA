@@ -1,8 +1,5 @@
-from .src import EventDetection, Geocoder, TextClassifier, TextClassifierTopics
+from .src import Geocoder
 
 __all__ = [
-    "EventDetection",
-    "TextClassifier",
-    "TextClassifierTopics",
     "Geocoder",
 ]

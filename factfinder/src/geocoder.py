@@ -4,7 +4,7 @@ location in the text.
 In this scenario texts are comments in social networks (e.g. Vkontakte).
 Thus the model was trained on the corpus of comments on Russian language.
 """
-
+import numpy as np 
 import re
 import warnings
 from typing import List, Optional
@@ -24,6 +24,37 @@ from geopy.exc import GeocoderUnavailable
 from geopy.geocoders import Nominatim
 from shapely.geometry import Point
 from tqdm import tqdm
+from natasha import (
+    Segmenter,
+    MorphVocab,
+    
+    NewsEmbedding,
+    NewsMorphTagger,
+    NewsSyntaxParser,
+    NewsNERTagger,
+    
+    PER,
+    NamesExtractor,
+    DatesExtractor,
+    MoneyExtractor,
+    AddrExtractor,
+
+    Doc
+)
+
+segmenter = Segmenter()
+morph_vocab = MorphVocab()
+
+emb = NewsEmbedding()
+morph_tagger = NewsMorphTagger(emb)
+syntax_parser = NewsSyntaxParser(emb)
+ner_tagger = NewsNERTagger(emb)
+
+names_extractor = NamesExtractor(morph_vocab)
+dates_extractor = DatesExtractor(morph_vocab)
+money_extractor = MoneyExtractor(morph_vocab)
+addr_extractor = AddrExtractor(morph_vocab)
+
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -242,10 +273,40 @@ class Geocoder:
                 .replace('"', "")
             )
             score = round(sentence.get_labels("ner")[0].score, 3)
-            return pd.Series([res, score])
+            if score>0.9:
+                return pd.Series([res, score])
+            else:
+                return pd.Series([None, None])
+    
 
         except IndexError:
             return pd.Series([None, None])
+    
+    # Блок с Наташей
+    exceptions = pd.merge(pd.read_csv(r"C:\Users\USER\SOIKA\factfinder\src\exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv(r"C:\Users\USER\SOIKA\factfinder\src\exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
+    def function(row, exceptions, text_col):
+        if row["Street"] == None or row["Street"] == np.nan:
+            i = row[text_col]
+            location_f = []
+            i = re.sub(r'\[.*?\]', '', i)
+            doc = Doc(i)
+            doc.segment(segmenter)
+            doc.tag_morph(morph_tagger)
+            doc.parse_syntax(syntax_parser)
+            doc.tag_ner(ner_tagger)
+            for span in doc.spans:
+                span.normalize(morph_vocab)
+            location = list(filter(lambda x: x.type == 'LOC', doc.spans))
+            for span in location:
+                if span.normal.lower() not in exceptions['Сокращенное наименование'].str.lower().values:
+                    location_f.append(span)
+            location_f = [(span.text) for span in location_f]
+            if not location_f:
+                return None
+            return location_f[0]
+        else:
+            return row["Street"]
+    
 
     @staticmethod
     def get_stem(street_names_df: pd.DataFrame) -> pd.DataFrame:
@@ -349,6 +410,8 @@ class Geocoder:
         df[["Street", "Score"]] = df[text_column].progress_apply(
             lambda t: self.extract_ner_street(t)
         )
+        df["Street"] = df[[text_column,"Street"]].progress_apply(
+            lambda row: Geocoder.function(row, self.exceptions, text_column), axis=1)
         df = df[df.Street.notna()]
         df = df[df["Street"].str.contains("[а-яА-Я]")]
 
