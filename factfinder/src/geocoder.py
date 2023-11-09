@@ -17,6 +17,7 @@ import osmnx as ox
 import pandas as pd
 import pymorphy2
 import requests
+import os
 import torch
 from flair.data import Sentence
 from flair.models import SequenceTagger
@@ -235,7 +236,12 @@ class Geocoder:
     This class provides a functionality of simple geocoder
     """
 
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     global_crs: int = 4326
+    exceptions = pd.merge(pd.read_csv(os.path.join(dir_path, "exceptions_countries.csv"), encoding="utf-8", sep=",")
+                        ,pd.read_csv(os.path.join(dir_path, "exсeptions_city.csv"), encoding="utf-8", sep=","), 
+                        on='Сокращенное наименование', how='outer')
 
     def __init__(
         self,
@@ -283,7 +289,6 @@ class Geocoder:
             return pd.Series([None, None])
     
     # Блок с Наташей
-    exceptions = pd.merge(pd.read_csv("src/exceptions_countries.csv", encoding="utf-8", sep=","),pd.read_csv("src/exсeptions_city.csv", encoding="utf-8", sep=","), on='Сокращенное наименование', how='outer')
     def get_ner_address_natasha(row, exceptions, text_col): #input: string, list, series... output: string
         if row["Street"] == None or row["Street"] == np.nan:
             i = row[text_col]
