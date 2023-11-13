@@ -5,3 +5,6 @@ lint:
 
 format:
 	python -m black ${FILES}
+
+test:
+	python -m pytest
