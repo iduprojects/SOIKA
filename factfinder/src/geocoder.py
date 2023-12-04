@@ -19,6 +19,8 @@ import pymorphy2
 import requests
 import os
 import torch
+import string
+import math
 from flair.data import Sentence
 from flair.models import SequenceTagger
 from geopy.exc import GeocoderUnavailable
@@ -312,6 +314,64 @@ class Geocoder:
         else:
             return row["Street"]
     
+     # Извлечение номера дома
+    def extract_bild_num(t, s):
+        if isinstance(t, float) and math.isnan(t):
+            return None  
+
+        clear_text = str(t).translate(str.maketrans("", "", string.punctuation))
+        clear_text = clear_text.lower().split(' ')
+        street_word = s
+        positions = [index for index, item in enumerate(clear_text) if item == street_word]
+
+        if not positions:
+            return None
+
+        position = positions[0]
+        search_start = max(0, position - 3)
+        search_end = min(len(clear_text), position + 4)
+
+        num_result = None
+
+        for f_index in range(max(0, search_start), min(len(clear_text), search_end)):
+            element = clear_text[f_index]
+            if any(character.isdigit() for character in str(element)):
+                num_result = element
+                break
+
+        return num_result
+
+    # Извлечение топонима в название улицы
+    def extract_toponym(t, s):
+        if isinstance(t, float) and math.isnan(t):
+            return s  
+
+        clear_text = str(t).translate(str.maketrans("", "", string.punctuation))
+        clear_text = clear_text.lower().split(' ')
+        street_word = s
+        positions = [index for index, item in enumerate(clear_text) if item == street_word]
+
+        if not positions:
+            return s  
+
+        position = positions[0]
+        search_start = max(0, position - 3)
+        search_end = min(len(clear_text), position + 4)
+
+        ad_result = []
+        target_values = ["пр", "проспект", "проспекте", "ул", "улица", "улице", "площадь", "площади", "п", "пер", "переулок", "проезд", "проезде", "дорога", "дороге"]
+
+        for i in range(search_start, min(search_end + 1, len(clear_text))):
+            word = clear_text[i]
+            normal_form = morph.parse(word)[0].normal_form  
+            if normal_form in target_values:
+                ad_result.append(normal_form)
+
+        if ad_result:
+            return f"{s} {' '.join(ad_result)}"  
+        else:
+            return s  
+
 
     @staticmethod
     def get_stem(street_names_df: pd.DataFrame) -> pd.DataFrame:
@@ -429,7 +489,9 @@ class Geocoder:
         )
         df["Street"] = df["Street"].apply(lambda x: pattern2.sub("", x).strip())
         df["Street"] = df["Street"].str.lower()
-
+        df['Numbers'] = df.apply(lambda row: Geocoder.extract_bild_num(row['Numbers'], row['Street']), axis=1)
+        df['Numbers'].fillna(df.apply(lambda row: Geocoder.extract_bild_num(row['Текст комментария'], row['Street']), axis=1), inplace=True)
+        df['Street'] = df.apply(lambda row: Geocoder.extract_toponym(row['Текст комментария'], row['Street']), axis=1)
         return df
 
     def create_gdf(self, df: pd.DataFrame) -> gpd.GeoDataFrame:
