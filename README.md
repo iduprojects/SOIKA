@@ -115,6 +115,9 @@ The project has [MIT License](./LICENSE)
 
 The library was developed as the main part of the ITMO University project #622264 **"Development of a service for identifying objects of the urban environment of public activity and high-risk situations on the basis of text messages of citizens"**
 
+Реализовано при финансовой поддержке Фонда поддержки проектов Национальной технологической инициативы в рамках реализации "дорожной карты" развития высокотехнологичного направления "Искусственный интеллект" на период до 2030 года (Договор № 70-2021-00187)
+
+This research is financially supported by the Foundation for National Technology Initiative's Projects Support as a part of the roadmap implementation for the development of the high-tech field of Artificial Intelligence for the period up to 2030 (agreement 70-2021-00187)
 
 ## Contacts
 
