@@ -18,6 +18,7 @@ class EventDetection:
     It is based on the application of semantic clustering method (BERTopic)
     on the texts in the context of urban spatial model
     """
+
     def __init__(self):
         np.random.seed(42)
         self.population_filepath = None
